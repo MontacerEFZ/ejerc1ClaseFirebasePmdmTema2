@@ -29,16 +29,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private List<Product> objects; //elementos a mostrar
     private int resource; //vista a mostrar
     private Context context; //donde se mostrar
-    private SharedPreferences sp;
-    private Gson gson;
+
 
     public ProductAdapter(List<Product> objects, int resource, Context context) {
         this.objects = objects;
         this.resource = resource;
         this.context = context;
-
-        gson = new Gson();
-        sp = context.getSharedPreferences(Constantes.DATOS, context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -142,18 +138,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     product.setPrice(Float.parseFloat(txtPrice.getText().toString()));
 
                     notifyItemChanged(objects.indexOf(product));
-                    guardarInformacion();
                 }
             }
         });
         return builder.create();
-    }
-
-    private void guardarInformacion() {
-        SharedPreferences.Editor editor = sp.edit();
-        String listaJson = gson.toJson(objects);
-        editor.putString(Constantes.LISTAPRODUCTOS, listaJson);
-        editor.apply();
     }
 
     private AlertDialog confirmDelete(Product product){
@@ -168,7 +156,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 int position = objects.indexOf(product);
                 objects.remove(product);
                 notifyItemRemoved(position); //position da error, poner holder.getAdapterPosition(), el notify redibuja la lista
-                guardarInformacion();
 
             }
         });

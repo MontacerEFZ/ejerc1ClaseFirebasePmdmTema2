@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Product> productList;
     private ProductAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private SharedPreferences sp;
-    private Gson gson;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        sp = getSharedPreferences(Constantes.DATOS, MODE_PRIVATE);
-        gson = new Gson();
 
         productList = new ArrayList<>(); //importante, no olvidar inicializar lista al crearla
 
@@ -61,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         binding.contentMain.container.setAdapter(adapter);
         binding.contentMain.container.setLayoutManager(layoutManager);
 
-        leerInformacion();
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,16 +65,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void leerInformacion() {
-        if(sp.contains(Constantes.LISTAPRODUCTOS)){
-            String listaJson = sp.getString(Constantes.LISTAPRODUCTOS, "[]");
-            Type tipo = new TypeToken<ArrayList<Product>>(){}.getType(); //est es una especie de cast
-            ArrayList<Product> temp = gson.fromJson(listaJson, tipo);
-            productList.clear();
-            productList.addAll(temp);
-            adapter.notifyItemRangeInserted(0, productList.size());
-        }
-    }
 
     private AlertDialog createProduct(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -139,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
                     productList.add(0, product);
                     adapter.notifyItemInserted(0);
-                    guardarInformacion();
                    // Toast.makeText(MainActivity.this, product.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -147,13 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         return builder.create();
-    }
-
-    private void guardarInformacion() {
-        SharedPreferences.Editor editor = sp.edit();
-        String listaJson = gson.toJson(productList);
-        editor.putString(Constantes.LISTAPRODUCTOS, listaJson);
-        editor.apply();
     }
 
     @Override
