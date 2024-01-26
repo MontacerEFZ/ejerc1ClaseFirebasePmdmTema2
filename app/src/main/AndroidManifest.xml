@@ -24,7 +24,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:label="@string/app_name"
+            android:label="lista compra"
             android:theme="@style/Theme.Ejerc5ClasePmdmTema1">
         </activity>
     </application>
