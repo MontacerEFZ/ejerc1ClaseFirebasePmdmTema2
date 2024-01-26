@@ -24,6 +24,12 @@ import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.ktx.Firebase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Product> productList;
     private ProductAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+
 
 
     @Override
@@ -53,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         productList = new ArrayList<>(); //importante, no olvidar inicializar lista al crearla
+
+        database = FirebaseDatabase.getInstance("https://ejemplofirebasebpmdmtema2-default-rtdb.europe-west1.firebasedatabase.app/");
+        reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista");
+
 
         adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this); //adapter siempre despues de inicializar el arraylist
             //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main
@@ -67,6 +80,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 createProduct().show();
                }
+        });
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                productList.clear();
+                GenericTypeIndicator<ArrayList<Product>> gti = new GenericTypeIndicator<ArrayList<Product>>() {};
+                productList.addAll(snapshot.getValue(gti));
+                adapter.notifyDataSetChanged();;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
     }
 
