@@ -1,6 +1,7 @@
 package montacer.elfazazi.ejerc5clasepmdmtema1;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -14,12 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.ktx.Firebase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -133,17 +138,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) { //metodo para q funcione el movil cuando se gire
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("LIST", productList);
+    public boolean onCreateOptionsMenu(Menu menu) {
+         super.onCreateOptionsMenu(menu);
+         getMenuInflater().inflate(R.menu.menu_logout, menu);
+         return true;
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) { //metodo para q funcione el movil cuando se gire
-        super.onRestoreInstanceState(savedInstanceState);
-
-        productList.addAll((ArrayList<Product>) savedInstanceState.getSerializable("LIST"));
-
-        adapter.notifyItemRangeInserted(0, productList.size());
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+         super.onOptionsItemSelected(item);
+         if (item.getItemId() == R.id.btnSalir){
+             FirebaseAuth.getInstance().signOut();
+             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+             finish();
+         }
+         return true;
     }
 }

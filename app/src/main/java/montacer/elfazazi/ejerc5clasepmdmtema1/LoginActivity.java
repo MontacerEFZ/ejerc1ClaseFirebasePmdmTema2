@@ -55,6 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //usuario ejemplo para probar: qwertyuiop@gmail.es
+    //password: 123456789
+
     private void doRegister(String email, String password) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -97,8 +100,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null){
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUI(auth.getCurrentUser());
     }
 }
