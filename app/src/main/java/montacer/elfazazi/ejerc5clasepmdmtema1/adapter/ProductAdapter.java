@@ -3,7 +3,6 @@ package montacer.elfazazi.ejerc5clasepmdmtema1.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,24 +16,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
 import montacer.elfazazi.ejerc5clasepmdmtema1.R;
-import montacer.elfazazi.ejerc5clasepmdmtema1.configuracion.Constantes;
 import montacer.elfazazi.ejerc5clasepmdmtema1.modelos.Product;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductVH> {
     private List<Product> objects; //elementos a mostrar
     private int resource; //vista a mostrar
     private Context context; //donde se mostrar
+    private DatabaseReference reference;
 
 
-    public ProductAdapter(List<Product> objects, int resource, Context context) {
+    public ProductAdapter(List<Product> objects, int resource, Context context, DatabaseReference reference) {
         this.objects = objects;
         this.resource = resource;
         this.context = context;
+        this.reference = reference;
     }
 
     @NonNull
@@ -137,6 +137,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     product.setQuantity(Integer.parseInt(txtQuantity.getText().toString()));
                     product.setPrice(Float.parseFloat(txtPrice.getText().toString()));
 
+                    reference.setValue(objects);
+
                     notifyItemChanged(objects.indexOf(product));
                 }
             }
@@ -155,6 +157,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             public void onClick(DialogInterface dialog, int which) {
                 int position = objects.indexOf(product);
                 objects.remove(product);
+                reference.setValue(objects);
+
                 notifyItemRemoved(position); //position da error, poner holder.getAdapterPosition(), el notify redibuja la lista
 
             }

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista");
 
 
-        adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this); //adapter siempre despues de inicializar el arraylist
+        adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this, reference); //adapter siempre despues de inicializar el arraylist
             //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main
 
         layoutManager = new GridLayoutManager(this, 2); //mostrara las cosas en columnas de 2
@@ -85,10 +85,12 @@ public class MainActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                productList.clear();
-                GenericTypeIndicator<ArrayList<Product>> gti = new GenericTypeIndicator<ArrayList<Product>>() {};
-                productList.addAll(snapshot.getValue(gti));
-                adapter.notifyDataSetChanged();;
+             if (snapshot.exists()){
+                 productList.clear();
+                 GenericTypeIndicator<ArrayList<Product>> gti = new GenericTypeIndicator<ArrayList<Product>>() {};
+                 productList.addAll(snapshot.getValue(gti));
+                 adapter.notifyDataSetChanged();
+             }
             }
 
             @Override
@@ -155,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
                             Float.parseFloat(txtPrice.getText().toString()));
 
                     productList.add(0, product);
-                    adapter.notifyItemInserted(0);
+                    //adapter.notifyItemInserted(0);
+                    reference.setValue(productList);
                    // Toast.makeText(MainActivity.this, product.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
