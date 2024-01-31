@@ -27,7 +27,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private List<Product> objects; //elementos a mostrar
     private int resource; //vista a mostrar
     private Context context; //donde se mostrar
-    private DatabaseReference reference;
+    private DatabaseReference reference; // hace referencia a un nodo de la base de datos con el q interactuaremos, escribiendo y leyendo
 
 
     public ProductAdapter(List<Product> objects, int resource, Context context, DatabaseReference reference) {
@@ -137,7 +137,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     product.setQuantity(Integer.parseInt(txtQuantity.getText().toString()));
                     product.setPrice(Float.parseFloat(txtPrice.getText().toString()));
 
-                    reference.setValue(objects);
+                   reference.setValue(objects); //esto para que haga los cambios tambien en la base de datos
 
                     notifyItemChanged(objects.indexOf(product));
                 }
@@ -157,7 +157,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             public void onClick(DialogInterface dialog, int which) {
                 int position = objects.indexOf(product);
                 objects.remove(product);
-                reference.setValue(objects);
+             reference.setValue(objects); //esto para que haga los cambios tambien en la base de datos
 
                 notifyItemRemoved(position); //position da error, poner holder.getAdapterPosition(), el notify redibuja la lista
 

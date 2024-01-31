@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance(); //importantee para inicializar el euth
 
         binding.btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = binding.txtEmailLogin.getText().toString();
                 String password = binding.txtPasswordLogin.getText().toString();
 
-                if (!email.isEmpty() && !password.isEmpty()){
+                if (!email.isEmpty() && !password.isEmpty()){ //comprueba q ha rellenado los campos
                     doLogin(email, password);
                 }
             }
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = binding.txtEmailLogin.getText().toString();
                 String password = binding.txtPasswordLogin.getText().toString();
 
-                if (!email.isEmpty() && !password.isEmpty()){
+                if (!email.isEmpty() && !password.isEmpty()){ //comprueba q ha rellenado los campos
                     doRegister(email, password);
                 }
             }
@@ -63,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            updateUI(auth.getCurrentUser());
+                        if (task.isSuccessful()){ //si se ha creado el usuario correctamente
+                            updateUI(auth.getCurrentUser()); //envia ese usuario a updateUi
                         }else{
                             Toast.makeText(LoginActivity.this, "error en el registro", Toast.LENGTH_SHORT).show();
                         }
@@ -83,8 +83,8 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    updateUI(auth.getCurrentUser());
+                if (task.isSuccessful()){ //si se ha iniciado sesion correctamente
+                    updateUI(auth.getCurrentUser()); //envia ese usuario a updateUi
                 }else{
                     Toast.makeText(LoginActivity.this, "error en el login", Toast.LENGTH_SHORT).show();
                 }
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        if (currentUser != null){
+        if (currentUser != null){ //comprueba que hay un usuario y se va a mainActivity
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
@@ -107,7 +107,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
+        super.onStart(); //se ejecuta nada mas iniciar la aplicacion y envia el usuario a updateUi
+                //si existe un usuario (porq no se cerro la sesion) en updateUi ira directamente a la mainActivity
+                //sino, lo mandara a login activity
         updateUI(auth.getCurrentUser());
     }
 }

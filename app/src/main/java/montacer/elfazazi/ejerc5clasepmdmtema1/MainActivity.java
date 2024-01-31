@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Product> productList;
     private ProductAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private FirebaseDatabase database;
-    private DatabaseReference reference;
+    private FirebaseDatabase database; //para conectar con firebase
+    private DatabaseReference reference; //para acceder a una de las bd de firebase
 
 
 
@@ -63,12 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
         productList = new ArrayList<>(); //importante, no olvidar inicializar lista al crearla
 
-        database = FirebaseDatabase.getInstance("https://ejemplofirebasebpmdmtema2-default-rtdb.europe-west1.firebasedatabase.app/");
-        reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista");
+        database = FirebaseDatabase.getInstance("https://ejemplofirebasebpmdmtema2-default-rtdb.europe-west1.firebasedatabase.app/"); //localizamos la bas de datos
+   /*****/ reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista"); //guarda el usuario y dentro  guarda  la lista?***
 
-
-        adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this, reference); //adapter siempre despues de inicializar el arraylist
-            //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main
+        /*****/adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this, reference); //adapter siempre despues de inicializar el arraylist
+            //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main, reference q es? en este punto tiene algun valor o esta vacio?*****
 
         layoutManager = new GridLayoutManager(this, 2); //mostrara las cosas en columnas de 2
 
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {  //si se realiza algun cambio en la base de datos, se notifica para que refresque la interfaz
              if (snapshot.exists()){
                  productList.clear();
                  GenericTypeIndicator<ArrayList<Product>> gti = new GenericTypeIndicator<ArrayList<Product>>() {};
@@ -158,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
                     productList.add(0, product);
                     //adapter.notifyItemInserted(0);
-                    reference.setValue(productList);
-                   // Toast.makeText(MainActivity.this, product.toString(), Toast.LENGTH_SHORT).show();
+   /*******/        reference.setValue(productList); //porq se usa esto en lugar del adapter.notifyinteminserted(0)?********
                 }
             }
         });
@@ -171,16 +169,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
          super.onCreateOptionsMenu(menu);
-         getMenuInflater().inflate(R.menu.menu_logout, menu);
+         getMenuInflater().inflate(R.menu.menu_logout, menu); //"infla"para crear y q se pueda ver el menu
          return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) { //se ejecuta cada vez q tocamos algo del menu
          super.onOptionsItemSelected(item);
-         if (item.getItemId() == R.id.btnSalir){
-             FirebaseAuth.getInstance().signOut();
-             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+         if (item.getItemId() == R.id.btnSalir){ //comprueba q al item q le ha dado es al boton salir
+             FirebaseAuth.getInstance().signOut(); //cierra sesion
+             startActivity(new Intent(MainActivity.this, LoginActivity.class)); //lo manda a login activity
              finish();
          }
          return true;
