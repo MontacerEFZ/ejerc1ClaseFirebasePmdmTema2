@@ -65,9 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance("https://ejemplofirebasebpmdmtema2-default-rtdb.europe-west1.firebasedatabase.app/"); //localizamos la bas de datos
    /*****/ reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista"); //guarda el usuario y dentro  guarda  la lista?***
+            //a que nodo de la bd atacare
 
         /*****/adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this, reference); //adapter siempre despues de inicializar el arraylist
-            //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main, reference q es? en este punto tiene algun valor o esta vacio?*****
+            //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main, reference: para saber q noodo de la bd queremos escribirr
 
         layoutManager = new GridLayoutManager(this, 2); //mostrara las cosas en columnas de 2
 
@@ -156,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
                             Float.parseFloat(txtPrice.getText().toString()));
 
                     productList.add(0, product);
-                    //adapter.notifyItemInserted(0);
-   /*******/        reference.setValue(productList); //porq se usa esto en lugar del adapter.notifyinteminserted(0)?********
+                    adapter.notifyItemInserted(0);
+   /*******/        reference.setValue(productList);
                 }
             }
         });
