@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseDatabase database; //para conectar con firebase
-    private DatabaseReference reference; //para acceder a una de las bd de firebase
+    private DatabaseReference reference; //para acceder a una de loss nodos de la bd de firebase
 
 
 
@@ -64,10 +64,9 @@ public class MainActivity extends AppCompatActivity {
         productList = new ArrayList<>(); //importante, no olvidar inicializar lista al crearla
 
         database = FirebaseDatabase.getInstance("https://ejemplofirebasebpmdmtema2-default-rtdb.europe-west1.firebasedatabase.app/"); //localizamos la bas de datos
-   /*****/ reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista"); //guarda el usuario y dentro  guarda  la lista?***
-            //a que nodo de la bd atacare
+         reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista"); //a que nodo de la bd atacare
 
-        /*****/adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this, reference); //adapter siempre despues de inicializar el arraylist
+        adapter = new ProductAdapter(productList, R.layout.product_view_holder, MainActivity.this, reference); //adapter siempre despues de inicializar el arraylist
             //este es el contructor del ProductAdapter, le pasamos: la lista, que vista queremos mostrar q es el resource y donde queremos mostrarla que es en el main, reference: para saber q noodo de la bd queremos escribirr
 
         layoutManager = new GridLayoutManager(this, 2); //mostrara las cosas en columnas de 2
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
                     productList.add(0, product);
                     adapter.notifyItemInserted(0);
-   /*******/        reference.setValue(productList);
+                    reference.setValue(productList);
                 }
             }
         });
